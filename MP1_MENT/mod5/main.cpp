@@ -34,10 +34,46 @@ int hexStringToInt(PascalString binaryDigits) {
   return returnValue;
 }
 
+PascalString bitwiseHexAnd(PascalString a, PascalString b) {
+  PascalString result;
+  if(a.length > b.length) {
+    result.length = a.length;
+    for(int i = a.length - 1; i >= 0; --i) {
+      if(i > (a.length - b.length)) {
+              result.characters[i] = a.characters[i] & b.characters[i];
+      } else {
+        result.characters[i] = 0;
+      }
+     }
+  } else if(a.length < b.length){
+    result.length = b.length;
+    for(int i = b.length - 1; i >= 0; --i) {
+      if(i > (b.length - a.length)) {
+              result.characters[i] = b.characters[i] & a.characters[i];
+      } else {
+        result.characters[i] = 0;
+      }
+     }
+  } else {
+    result.length = a.length;
+    for(int i = a.length - 1; i >= 0; --i) {
+      result.characters[i] = a.characters[i] & b.characters[i];
+    }
+  }
+
+  return result;
+}
+
+void printPascalString(PascalString s) {
+  for(int i = 0; i < s.length; ++i) {
+    std::cout << s.characters[i];
+  }
+  std::cout << std::endl;
+}
+
 int main(int argc, char** argv, char**envp) {
-  PascalString s = {3, '1', '0', '0'};
-  PascalString s2 = {4, 'f', 'f', 'f', 'f'};
-  std::cout << hexStringToInt(s) << std::endl;
-  std::cout << hexStringToInt(s2) << std::endl;
+  PascalString s = {4, 'f', 'f', 'f', 'f'};
+  PascalString s2 = {4, 'b', 'b', 'b', 'b'};
+  printPascalString(bitwiseHexAnd(s, s2));
   return 0;
 }
