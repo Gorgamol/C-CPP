@@ -1,0 +1,72 @@
+public class Heap {
+ 
+ 
+ 
+    public static void main(String[] args) {
+        int n = 1023;
+        int field[] = new int[n];
+        Heap a = new Heap(n);
+        Heap b = new Heap(n);
+       
+       
+        for (int i = n; i > 0; i--){
+            a.insert(i, (n - i + 1));
+            field[(n - i)] = i;
+        }
+        b.insert(field);
+       
+        a.printHeap();
+        b.printHeap();
+    }
+ 
+        private int[] heap;
+        private int size;
+        public Heap(int size) {
+            heap = new int[(size + 1)];
+            this.size = size;
+        }
+ 
+        public void insert(int element, int index) { //iterativ
+            heap[index] = element;
+            boolean sorting = true;
+            while(sorting){
+                if(heap[index] < heap[(index / 2)] && (index / 2) >= 1){               
+                    swap(index, (index / 2));
+                    index = index / 2;
+                } else {
+                    sorting = false;
+                }
+            }
+        }
+       
+        public void insert(int[] heapData) { //blocked
+            for(int i = 0; i < size-1; i++)
+                heap[i + 1] = heapData[i];
+            boolean sorting = true;
+           
+           
+            while(sorting){
+                sorting = false;
+                for(int index = size ; index > 2; index = index -2){
+                    int i_index = heap[index] > heap[index - 1]?index:index-1;
+                    if( heap[i_index] <  heap[i_index / 2]){
+                        swap(i_index, i_index / 2);
+                        sorting = true;
+                    }
+                }
+            }
+        }
+       
+        private void swap(int indexA, int indexB){
+            int temp = heap[indexA];
+            heap[indexA] = heap[indexB];
+            heap[indexB] = temp;
+            heap[0]++;
+        }
+       
+        public void printHeap() {
+            for (int i = 1; i < size; i++)
+                System.out.print("[" + heap[i] + "] ");
+            System.out.println("\n"+heap[0] + " Vertauschungen");
+        }
+}
