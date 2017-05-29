@@ -9,13 +9,23 @@ struct Position{
   Position(int x_=0, int y_=0){ x=x_;y=y_;}
 };
 
-class Point{
+class Shape{
 protected:
   Position _position;
   Colors _color;
 public:
+  virtual void draw() = 0;
+  virtual ~Shape();
+};
+
+Shape::~Shape() {
+
+}
+
+class Point : public Shape {
+public:
   Point(int x=0, int y=0, Colors color = Colors::RED);
-  void draw();
+  virtual void draw();
 };
 
 Point::Point(int x, int y, Colors color){
@@ -27,14 +37,12 @@ void Point::draw(){
   ansiConsole.printText(_position.x,_position.y,"*", _color);
 }
 
-class Circle{
+class Circle : public Shape {
 protected:
-  Position  _position;
   int       _radius;
-  Colors _color;
 public:
   Circle(int x=0, int y=0, int radius=0, Colors color = Colors::RED);
-  void draw();
+  virtual void draw();
 };
 
 Circle::Circle(int x, int y, int radius, Colors color){
@@ -63,15 +71,13 @@ void Circle::draw(){
   }
 }
 
-class Rectangle {
+class Rectangle : public Shape{
 protected:
-  Position  _position;
   int       _height;
   int       _width;
-  Colors _color;
 public:
   Rectangle(int x=0, int y=0, int height=0, int width=0, Colors color = Colors::RED);
-  void draw();
+  virtual void draw();
 };
 
 Rectangle::Rectangle(int x, int y, int height, int width, Colors color) {
@@ -93,15 +99,11 @@ void Rectangle::draw() {
 }
 
 class Scene {
-protected:
-  std::vector<Point*> _vecPoint;
-  std::vector<Circle*> _vecCircle;
-  std::vector<Rectangle*> _vecRectangle;
+private:
+  std::vector<Shape*> _vecShape;
 public:
   Scene();
-  void addPoint(Point* p);
-  void addCircle(Circle* c);
-  void addRectangle(Rectangle* r);
+  void addShape(Shape* s);
   void draw();
   ~Scene();
 };
@@ -110,45 +112,21 @@ Scene::Scene() {
 
 }
 
-void Scene::addPoint(Point* p) {
-  _vecPoint.push_back(p);
-}
-
-void Scene::addCircle(Circle* c) {
-  _vecCircle.push_back(c);
-}
-
-void Scene::addRectangle(Rectangle* r) {
-  _vecRectangle.push_back(r);
+void Scene::addShape(Shape* s) {
+  _vecShape.push_back(s);
 }
 
 void Scene::draw() {
-  for(auto p : _vecPoint) {
-    p->draw();
-  }
-
-  for(auto c : _vecCircle) {
-    c->draw();
-  }
-
-  for(auto r : _vecRectangle) {
-    r->draw();
+  for(auto s : _vecShape) {
+    s->draw();
   }
 }
 
 Scene::~Scene() {
-  for(auto p : _vecPoint) {
-      delete p;
+  for(auto s : _vecShape) {
+      delete s;
   }
-  _vecPoint.clear();
-  for(auto c : _vecCircle) {
-      delete c;
-  }
-  _vecCircle.clear();
-  for(auto r : _vecRectangle) {
-      delete r;
-  }
-  _vecRectangle.clear();
+  _vecShape.clear();
 }
 
 int main(int argc, char **argv)
@@ -180,25 +158,25 @@ int main(int argc, char **argv)
   consol.clearScreen();
 
   Scene test;
-  test.addCircle(new Circle(10, 8, 10, Colors::BLUE));
-  test.addCircle(new Circle(10,20, 15, Colors::BLUE));
-  test.addPoint(new Point(8, 6, Colors::BLACK));
-  test.addPoint(new Point(12, 6, Colors::BLACK));
-  test.addPoint(new Point(10, 8, Colors::RED));
-  test.addPoint(new Point(10, 10, Colors::BLACK));
-  test.addPoint(new Point(11, 10, Colors::BLACK));
-  test.addPoint(new Point(12, 9, Colors::BLACK));
-  test.addPoint(new Point(9, 10, Colors::BLACK));
-  test.addPoint(new Point(8, 9, Colors::BLACK));
-  test.addPoint(new Point(10, 16, Colors::BLACK));
-  test.addPoint(new Point(10, 18, Colors::BLACK));
-  test.addPoint(new Point(10, 20, Colors::BLACK));
-  test.addPoint(new Point(10, 22, Colors::BLACK));
-  test.addRectangle(new Rectangle(25, 20, 5, 10, Colors::YELLOW));
-  test.addPoint(new Point(25, 7, Colors::BLUE));
-  test.addPoint(new Point(30, 14, Colors::BLUE));
-  test.addPoint(new Point(22, 11, Colors::BLUE));
-  test.addPoint(new Point(35, 8, Colors::BLUE));
+  test.addShape(new Circle(10, 8, 10, Colors::BLUE));
+  test.addShape(new Circle(10,20, 15, Colors::BLUE));
+  test.addShape(new Point(8, 6, Colors::BLACK));
+  test.addShape(new Point(12, 6, Colors::BLACK));
+  test.addShape(new Point(10, 8, Colors::RED));
+  test.addShape(new Point(10, 10, Colors::BLACK));
+  test.addShape(new Point(11, 10, Colors::BLACK));
+  test.addShape(new Point(12, 9, Colors::BLACK));
+  test.addShape(new Point(9, 10, Colors::BLACK));
+  test.addShape(new Point(8, 9, Colors::BLACK));
+  test.addShape(new Point(10, 16, Colors::BLACK));
+  test.addShape(new Point(10, 18, Colors::BLACK));
+  test.addShape(new Point(10, 20, Colors::BLACK));
+  test.addShape(new Point(10, 22, Colors::BLACK));
+  test.addShape(new Rectangle(25, 20, 5, 10, Colors::YELLOW));
+  test.addShape(new Point(25, 7, Colors::BLUE));
+  test.addShape(new Point(30, 14, Colors::BLUE));
+  test.addShape(new Point(22, 11, Colors::BLUE));
+  test.addShape(new Point(35, 8, Colors::BLUE));
   test.draw();
 
   return 0;

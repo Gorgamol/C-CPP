@@ -29,11 +29,17 @@ struct BinaryOctet {
       evenParity = true;
     }
   }
-  std::string toString();
+  std::string toString() const;
+  operator double();
 };
 
-std::string BinaryOctet::toString() {
-    std::string s = "";
+std::string BinaryOctet::toString() const {
+    std::string s = "Even Parity: ";
+    if(evenParity == true) {
+      s += "true\n";
+    } else {
+      s += "false\n";
+    }
     for(int i = 0; i < bitsPerOctet; i++) {
       s += bitsAsDigits[i];
     }
@@ -46,6 +52,10 @@ int binaryOctetToInt(BinaryOctet a) {
     result = result * 2 + (a.bitsAsDigits[i] - 48);
   }
   return result;
+}
+
+BinaryOctet::operator double() {
+  return binaryOctetToInt(*this);
 }
 
 BinaryOctet intToBinaryOctet(int a) {
@@ -94,6 +104,16 @@ bool operator!= (BinaryOctet left, BinaryOctet right) {
   return false;
 }
 
+BinaryOctet operator+= (BinaryOctet left, BinaryOctet right) {
+  BinaryOctet result = intToBinaryOctet(binaryOctetToInt(left) + binaryOctetToInt(right));
+  return result;
+}
+
+BinaryOctet operator-= (BinaryOctet left, BinaryOctet right) {
+  BinaryOctet result = intToBinaryOctet(binaryOctetToInt(left) - binaryOctetToInt(right));
+  return result;
+}
+
 BinaryOctet doCalculation(BinaryOctet a, BinaryOctet b){
   BinaryOctet result;
 
@@ -107,8 +127,12 @@ BinaryOctet doCalculation(BinaryOctet a, BinaryOctet b){
 }
 
 std::ostream& operator<< (std::ostream& os, const BinaryOctet &toBePrinted){
-	os << BinaryOctet::toString(toBePrinted);
+	os << toBePrinted.toString();
 	return os;
+}
+
+void foobar(double d) {
+    std::cout << d << std::endl;
 }
 
 int main(int argc, char **argv)
@@ -116,6 +140,7 @@ int main(int argc, char **argv)
   BinaryOctet a = 0b00001111;
   BinaryOctet b = 0b00000110;
   std::cout << "result = " << doCalculation(a,b) << std::endl;
+  foobar(b);
 
-    return 0;
+  return 0;
 }
