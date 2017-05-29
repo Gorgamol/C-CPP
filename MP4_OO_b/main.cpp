@@ -96,7 +96,7 @@ private:
 
 struct A : public StackObject {
     A(){std::cout << "+A ";}
-    //A(const A&){std::cout << "+A";}
+    A(const A&){std::cout << "+A";}
     ~A(){std::cout << "-A ";}
 };
 
@@ -160,17 +160,17 @@ public:
     ~K(){std::cout << "-K ";}
 };
 
-class L : public K {
+class M : public K {
+public:
+  B b;
+    M(){std::cout << "+M ";}
+    ~M(){std::cout << "-M ";}
+};
+
+class L : public M {
 public:
   L(){std::cout << "+L ";}
   ~L(){std::cout << "-L ";}
-};
-
-
-class M : public L {
-public:
-    M(){std::cout << "+M ";}
-    ~M(){std::cout << "-M ";}
 };
 
 B AtoB(A a) {
@@ -197,8 +197,7 @@ void pattern2() {
 void pattern3() {
   std::cout << "\npattern3()" << std::endl;
   A a1;
-  A a2;
-  AtoB(a2); //noch fehler
+  AtoB(a1);
   C c;
 }
 
@@ -216,12 +215,39 @@ int main(int argc, const char * argv[]) {
     delete k;
   }*/
 
-  pattern1();
+  /*pattern1();
   std::cout << std::endl;
   pattern2();
   std::cout << std::endl;
   pattern3();
   std::cout << std::endl;
+  std::cout << std::endl;
+  L* p1 = new L();
+  delete p1;
+  std::cout << std::endl;
+  L* p2 = new L();
+  delete p2;*/
+
+  K* p1;
+ {
+   A a;
+    {
+      B b;
+      p1 = new K();
+    }
+    delete p1;
+ }
+
+ std::cout << std::endl;
+
+ {
+   A a;
+   L* p2 = new L();
+      delete p2;
+   std::cout << " \nHello World \n";
+
+ }
+
 
   HeapObject::assertionsHold();
   std::cout << "ENDE" << std::endl;

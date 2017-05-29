@@ -114,6 +114,11 @@ BinaryOctet operator-= (BinaryOctet left, BinaryOctet right) {
   return result;
 }
 
+BinaryOctet operator& (BinaryOctet left, BinaryOctet right) {
+  BinaryOctet result = (binaryOctetToInt(left) & binaryOctetToInt(right));
+  return result;
+}
+
 BinaryOctet doCalculation(BinaryOctet a, BinaryOctet b){
   BinaryOctet result;
 
@@ -141,6 +146,7 @@ int main(int argc, char **argv)
   BinaryOctet b = 0b00000110;
   std::cout << "result = " << doCalculation(a,b) << std::endl;
   foobar(b);
+  std::cout << (a & b) << std::endl;
 
   return 0;
 }

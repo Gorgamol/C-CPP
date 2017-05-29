@@ -14,6 +14,7 @@ protected:
   Position _position;
   Colors _color;
 public:
+  Shape(int x, int y, Colors color) : _position(Position(x,y)), _color(color) {}
   virtual void draw() = 0;
   virtual ~Shape();
 };
@@ -24,14 +25,9 @@ Shape::~Shape() {
 
 class Point : public Shape {
 public:
-  Point(int x=0, int y=0, Colors color = Colors::RED);
+  Point(int x=0, int y=0, Colors color = Colors::RED) : Shape(x, y, color) {}
   virtual void draw();
 };
-
-Point::Point(int x, int y, Colors color){
-  _position = Position(x,y);
-  _color = color;
-}
 
 void Point::draw(){
   ansiConsole.printText(_position.x,_position.y,"*", _color);
@@ -41,15 +37,9 @@ class Circle : public Shape {
 protected:
   int       _radius;
 public:
-  Circle(int x=0, int y=0, int radius=0, Colors color = Colors::RED);
+  Circle(int x=0, int y=0, int radius=0, Colors color = Colors::RED) : Shape(x, y, color), _radius(radius) {}
   virtual void draw();
 };
-
-Circle::Circle(int x, int y, int radius, Colors color){
-  _position = Position(x,y);
-  _color = color;
-  _radius=radius;
-}
 
 void Circle::draw(){
   /* see https://de.wikibooks.org/wiki/Formelsammlung_Mathematik:_Geometrie
@@ -71,21 +61,29 @@ void Circle::draw(){
   }
 }
 
+class TextedCircle : public Circle {
+protected:
+  std::string _text;
+public:
+  TextedCircle(int x=0, int y=0, int radius=0, Colors color = Colors::RED, std::string text = "") : Circle(x, y, radius, color) , _text(text) {}
+  virtual void draw();
+};
+
+void TextedCircle::draw() {
+  Circle::draw();
+  ansiConsole.printText(_position.x,_position.y,_text);
+}
+
+
 class Rectangle : public Shape{
 protected:
   int       _height;
   int       _width;
 public:
-  Rectangle(int x=0, int y=0, int height=0, int width=0, Colors color = Colors::RED);
+  Rectangle(int x=0, int y=0, int height=0, int width=0, Colors color = Colors::RED) : Shape(x, y, color), _height(height), _width(width) {}
   virtual void draw();
 };
 
-Rectangle::Rectangle(int x, int y, int height, int width, Colors color) {
-  _position = Position(x,y);
-  _height = height;
-  _width = width;
-  _color = color;
-}
 
 void Rectangle::draw() {
   for(int i = _position.x; i <= (_position.x + _width); i++) {
@@ -158,25 +156,7 @@ int main(int argc, char **argv)
   consol.clearScreen();
 
   Scene test;
-  test.addShape(new Circle(10, 8, 10, Colors::BLUE));
-  test.addShape(new Circle(10,20, 15, Colors::BLUE));
-  test.addShape(new Point(8, 6, Colors::BLACK));
-  test.addShape(new Point(12, 6, Colors::BLACK));
-  test.addShape(new Point(10, 8, Colors::RED));
-  test.addShape(new Point(10, 10, Colors::BLACK));
-  test.addShape(new Point(11, 10, Colors::BLACK));
-  test.addShape(new Point(12, 9, Colors::BLACK));
-  test.addShape(new Point(9, 10, Colors::BLACK));
-  test.addShape(new Point(8, 9, Colors::BLACK));
-  test.addShape(new Point(10, 16, Colors::BLACK));
-  test.addShape(new Point(10, 18, Colors::BLACK));
-  test.addShape(new Point(10, 20, Colors::BLACK));
-  test.addShape(new Point(10, 22, Colors::BLACK));
-  test.addShape(new Rectangle(25, 20, 5, 10, Colors::YELLOW));
-  test.addShape(new Point(25, 7, Colors::BLUE));
-  test.addShape(new Point(30, 14, Colors::BLUE));
-  test.addShape(new Point(22, 11, Colors::BLUE));
-  test.addShape(new Point(35, 8, Colors::BLUE));
+  test.addShape(new TextedCircle(20,20,15,Colors::GREEN,"Hallo!"));
   test.draw();
 
   return 0;
