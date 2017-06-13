@@ -11,7 +11,7 @@ struct BinaryOctet {
   bool evenParity;
   char bitsAsDigits[bitsPerOctet];
 
-  BinaryOctet(int a) {
+  explicit BinaryOctet(int a) {
     evenParity = false;
     int count = 0;
     for(int i = 0; i < bitsPerOctet; i++) {
@@ -129,7 +129,7 @@ int main() {
   std::cout << "\nstd::vector<BinaryOctet> unsortiert" << std::endl;
   std::vector<BinaryOctet> vecBinaryOctet;
   for(int i = 0; i < 10; i++) {
-    vecBinaryOctet.push_back(std::rand() % 100 + 0);
+    vecBinaryOctet.push_back(static_cast<BinaryOctet>(std::rand() % 100 + 0));
   }
 
   for(auto v : vecBinaryOctet) {
