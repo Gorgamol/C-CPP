@@ -12,6 +12,8 @@ public:
 
   FixedPoint getWert(void) const;
   FixedPoint operator+(const Bargeld &b) const;
+  FixedPoint operator-(const Bargeld &b) const;
+  bool operator==(const FixedPoint &b) const;
 
 private:
   FixedPoint wert;
